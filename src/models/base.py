@@ -130,3 +130,24 @@ def load_model(model_path: str, model_type: str, device: torch.device,
     model.to(device)
     model.eval()
     return model
+
+
+def get_model_info(model: nn.Module) -> Dict[str, Any]:
+    """
+    Get information about the model architecture.
+    
+    Args:
+        model: PyTorch model instance
+        
+    Returns:
+        Dictionary containing model information
+    """
+    total_params = sum(p.numel() for p in model.parameters())
+    trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    
+    return {
+        'total_parameters': total_params,
+        'trainable_parameters': trainable_params,
+        'model_name': model.__class__.__name__,
+        'model_size_mb': total_params * 4 / (1024 * 1024)  # Assuming float32
+    }
