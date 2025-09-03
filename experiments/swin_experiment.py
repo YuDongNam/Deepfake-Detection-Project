@@ -58,7 +58,23 @@ def run_swin_experiment():
         device="cuda" if config.get_device() == "cuda" else "cpu"
     )
     
-    print("✅ Video Swin Transformer Experiment Completed!")
+    # Print comprehensive performance summary
+    print("\n" + "="*80)
+    print("🎯 VIDEO SWIN TRANSFORMER - FINAL PERFORMANCE SUMMARY")
+    print("="*80)
+    
+    # Video-level metrics (main results)
+    video_metrics = results['video_metrics']
+    print(f"📊 Video-level Performance (Multi-face Test Set):")
+    print(f"   Accuracy:  {video_metrics['video_accuracy']:.4f}")
+    print(f"   F1-Score:  {video_metrics['video_f1_score']:.4f}")
+    print(f"   AUC:       {video_metrics['video_auc']:.4f}")
+    print(f"   MCC:       {video_metrics['video_mcc']:.4f}")
+    print(f"   Precision: {video_metrics['video_precision']:.4f}")
+    print(f"   Recall:    {video_metrics['video_recall']:.4f}")
+    print(f"   PR-AUC:    {video_metrics['video_pr_auc']:.4f}")
+    
+    print("\n✅ Video Swin Transformer Experiment Completed!")
     return results
 
 

@@ -14,7 +14,7 @@ PyTorch 기반의 딥페이크 영상 탐지 프로젝트입니다. **Video Swin
   * XceptionNet + LSTM (프레임 수준 특징 추출 + 시계열 모델링)
 * **데이터 분할**: 단일 얼굴(Train/Val) ↔ 다중 얼굴(Test)
 * **프레임 샘플링**: 각 클립당 연속 72프레임 입력
-* **일관된 평가 절차**: Accuracy, F1-Score, AUC 보고
+* **일관된 평가 절차**: Accuracy, F1-Score, AUC, MCC, Precision, Recall, PR-AUC 보고
 
 ---
 
@@ -22,10 +22,10 @@ PyTorch 기반의 딥페이크 영상 탐지 프로젝트입니다. **Video Swin
 
 *다중 얼굴 영상 테스트 데이터셋 기준.*
 
-| Model                  | Accuracy | F1-Score |   AUC  |
-| ---------------------- | :------: | :------: | :----: |
-| Video Swin Transformer |  0.9374  |  0.9650  | 0.8359 |
-| XceptionNet + LSTM     |  0.9374  |  0.9648  | 0.8511 |
+| Model                  | Accuracy | F1-Score |   AUC  |   MCC  | Precision | Recall | PR-AUC |
+| ---------------------- | :------: | :------: | :----: | :----: | :-------: | :----: | :----: |
+| Video Swin Transformer |  0.9374  |  0.9650  | 0.8359 | 0.6719 |  0.9650   | 0.9650 | 0.9625 |
+| XceptionNet + LSTM     |  0.9374  |  0.9648  | 0.8511 | 0.6820 |  0.9688   | 0.9609 | 0.9659 |
 
 ---
 
@@ -156,6 +156,10 @@ deepfake-detection/
 * **Accuracy**: 전체 정답 비율
 * **F1-Score**: 정밀도/재현율의 조화 평균 (불균형 데이터에 유용)
 * **AUC (ROC-AUC)**: 임계값 전 범위에서 분류 성능 요약
+* **MCC (Matthews Correlation Coefficient)**: 불균형 데이터에서 균형잡힌 성능 측정
+* **Precision**: 양성 예측 중 실제 양성 비율
+* **Recall**: 실제 양성 중 올바르게 예측된 비율
+* **PR-AUC (Precision-Recall AUC)**: 불균형 데이터에서 더 적합한 성능 측정
 
 ---
 

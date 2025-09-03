@@ -97,6 +97,7 @@ def evaluate_video_level(model: nn.Module, test_loader: DataLoader, device: torc
     """
     model.eval()
     video_pred_dict = defaultdict(list)
+    video_prob_dict = defaultdict(list)
     video_target_dict = {}
     
     with torch.no_grad():
@@ -112,27 +113,32 @@ def evaluate_video_level(model: nn.Module, test_loader: DataLoader, device: torc
             prob = torch.softmax(out, dim=-1)[:, 1].cpu().numpy()
             pred_label = (prob > threshold).astype(int)
             
-            for vid, pl, tar in zip(video_id, pred_label, label.cpu().numpy()):
+            for vid, pl, prob_val, tar in zip(video_id, pred_label, prob, label.cpu().numpy()):
                 video_pred_dict[vid].append(pl)
+                video_prob_dict[vid].append(prob_val)
                 video_target_dict[vid] = tar
     
     # Aggregate predictions at video level
     video_preds = []
     video_targets = []
+    video_probs = []
     
     for vid in video_pred_dict:
         # If any face is predicted as manipulated, video is manipulated
         is_manipulated = (np.array(video_pred_dict[vid]) > 0).any()
         video_preds.append(int(is_manipulated))
         video_targets.append(video_target_dict[vid])
+        # Use maximum probability among all faces for AUC calculation
+        video_probs.append(max(video_prob_dict[vid]))
     
-    # Calculate video-level metrics
     metrics = {
         'video_accuracy': accuracy_score(video_targets, video_preds),
         'video_f1_score': f1_score(video_targets, video_preds),
         'video_precision': precision_score(video_targets, video_preds, zero_division=0),
         'video_recall': recall_score(video_targets, video_preds, zero_division=0),
-        'video_mcc': matthews_corrcoef(video_targets, video_preds)
+        'video_mcc': matthews_corrcoef(video_targets, video_preds),
+        'video_auc': roc_auc_score(video_targets, video_probs),
+        'video_pr_auc': average_precision_score(video_targets, video_probs)
     }
     
     return metrics
