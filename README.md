@@ -108,6 +108,20 @@ python main.py evaluate \
   --data_dir ./data
 ```
 
+### 3) 개별 모델 실험 (Individual Model Experiments)
+
+**Video Swin Transformer 전용 실험**
+```bash
+python experiments/swin_experiment.py
+```
+
+**XceptionNet+LSTM 전용 실험**
+```bash
+python experiments/xception_experiment.py
+```
+
+> **참고**: 개별 실험 스크립트는 각 모델에 최적화된 하이퍼파라미터와 설정을 사용합니다.
+
 ---
 
 ## 프로젝트 구조 (Project Structure)
@@ -120,9 +134,17 @@ deepfake-detection/
 ├── main.py            # 메인 엔트리 (train/evaluate/추가 서브커맨드)
 ├── src/
 │   ├── data_loader.py # 프레임 로딩 및 전처리/샘플링(72프레임 등)
-│   ├── models.py      # Swin, Xception+LSTM 모델 정의
+│   ├── models/        # 모듈화된 모델 구조
+│   │   ├── __init__.py
+│   │   ├── base.py    # 공통 기능 및 기본 클래스
+│   │   ├── swin_transformer.py  # Video Swin Transformer 모델
+│   │   └── xception_lstm.py     # XceptionNet+LSTM 모델
 │   ├── train.py       # 학습 루프, 로그/체크포인트 저장
 │   └── evaluate.py    # 검증/테스트 및 지표 계산
+├── experiments/       # 개별 모델 실험 스크립트
+│   ├── __init__.py
+│   ├── swin_experiment.py      # Swin 전용 실험
+│   └── xception_experiment.py  # Xception 전용 실험
 ├── saved_models/      # 체크포인트(.pth)
 └── data/              # 데이터셋 (사용자 준비)
 ```
@@ -141,6 +163,8 @@ deepfake-detection/
 
 * **72프레임 연속 샘플링**: 프레임 간 상관관계를 모델이 학습하도록 강제하여 영상 기반 위변조의 시계열 패턴(예: 미세한 깜빡임/경계 아티팩트)을 포착합니다.
 * **단일 얼굴 → 다중 얼굴 일반화**: 학습 분포와 다른 테스트 분포에서의 강건성을 확인하기 위해 채택한 분할 방식입니다.
+* **모듈화된 모델 구조**: 각 모델을 독립적인 모듈로 분리하여 유지보수성과 확장성을 향상시켰습니다.
+* **개별 실험 지원**: 모델별 최적화된 실험 스크립트를 제공하여 세부 튜닝과 비교 분석을 용이하게 합니다.
 
 ---
 
